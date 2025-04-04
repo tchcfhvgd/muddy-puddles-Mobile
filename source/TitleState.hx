@@ -177,6 +177,13 @@ class TitleState extends MusicBeatState
 
 		Highscore.load();
 
+		if(!initialized)
+		{
+                        persistentUpdate = true;
+			persistentDraw = true;
+			mobile.MobileData.init();
+		}
+		
 		if (FlxG.save.data.weekCompleted != null)
 		{
 			StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
