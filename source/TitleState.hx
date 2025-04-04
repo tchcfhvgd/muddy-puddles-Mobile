@@ -36,6 +36,11 @@ import flixel.util.FlxTimer;
 import lime.app.Application;
 import openfl.Assets;
 
+#if hxvlc
+import hxvlc.flixel.*;
+import hxvlc.util.*;
+#end
+
 using StringTools;
 typedef TitleData =
 {
@@ -97,7 +102,7 @@ class TitleState extends MusicBeatState
 		#end
 		
 		#if (desktop && MODS_ALLOWED)
-		var path = "mods/" + Paths.currentModDirectory + "/images/gfDanceTitle.json";
+		var path = #if mobile Sys.getCwd() + #end "mods/" + Paths.currentModDirectory + "/images/gfDanceTitle.json";
 		//trace(path, FileSystem.exists(path));
 		if (!FileSystem.exists(path)) {
 			path = "mods/images/gfDanceTitle.json";
@@ -113,6 +118,7 @@ class TitleState extends MusicBeatState
 		titleJSON = Json.parse(Assets.getText(path)); 
 		#end
 		
+		/*
 		#if (polymod && !html5)
 		if (sys.FileSystem.exists('mods/')) {
 			var folders:Array<String> = [];
@@ -127,6 +133,7 @@ class TitleState extends MusicBeatState
 			}
 		}
 		#end
+                */
 		
 		#if CHECK_FOR_UPDATES
 		if(!closedState) {
@@ -207,43 +214,36 @@ class TitleState extends MusicBeatState
 	var firstBg:FlxSprite;
 	var laeppa:FlxSprite;
 
-	public function startVideo(name:String):Void {
+	public function startVideo(name:String)
+	{
 		#if VIDEOS_ALLOWED
-		var foundFile:Bool = false;
-		var fileName:String = #if MODS_ALLOWED Paths.modFolders('videos/' + name + '.' + Paths.VIDEO_EXT); #else ''; #end
+		var filepath:String = Paths.video(name);
 		#if sys
-		if(FileSystem.exists(fileName)) {
-			foundFile = true;
-		}
+		if(!FileSystem.exists(filepath))
+		#else
+		if(!OpenFlAssets.exists(filepath))
 		#end
-
-		if(!foundFile) {
-			fileName = Paths.video(name);
-			#if sys
-			if(FileSystem.exists(fileName)) {
-			#else
-			if(OpenFlAssets.exists(fileName)) {
-			#end
-				foundFile = true;
-			}
-		}
-
-		if(foundFile) {
-			var bg = new FlxSprite(-FlxG.width, -FlxG.height).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.BLACK);
-			bg.scrollFactor.set();
-			add(bg);
-
-			(new FlxVideo(fileName)).finishCallback = function() {
-				remove(bg);
-				startIntro();
-			}
+		{
+			FlxG.log.warn('Couldnt find video file: ' + name);
+			startIntro();
 			return;
-		} else {
-			FlxG.log.warn('Couldnt find video file: ' + fileName);
-            startIntro();
 		}
-		#end
+
+		var video:FlxVideo = new FlxVideo();
+		video.load(filepath);
+		video.play();
+		video.onEndReached.add(function()
+		{
+			video.dispose();
+			startIntro();
+			return;
+		}, true);
+
+		#else
+		FlxG.log.warn('Platform not supported!');
 		startIntro();
+		return;
+		#end
 	}
 
 	//Momento Copy + Paste JAJAJA
