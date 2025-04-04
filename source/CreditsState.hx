@@ -134,6 +134,8 @@ class CreditsState extends MusicBeatState
 		add(descText);
 
 		changeSelection();
+		
+		addTouchPad("UP_DOWN", "A_B");
 		super.create();
 	}
 
