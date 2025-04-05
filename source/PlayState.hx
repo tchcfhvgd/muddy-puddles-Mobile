@@ -70,6 +70,7 @@ import sys.FileSystem;
 import mobile.TouchButton;
 import mobile.TouchPad;
 import mobile.input.MobileInputID;
+import mobile.TouchUtil;
 
 using StringTools;
 
@@ -1568,7 +1569,7 @@ class PlayState extends MusicBeatState
 
 					new FlxTimer().start(0.001, function(prs:FlxTimer)
 					{
-						if (FlxG.keys.justReleased.ENTER && tbox.alpha == 1 && black.alpha == 0) //never try to put a key.pressed instead .-.
+						if (FlxG.keys.justReleased.ENTER || TouchUtil.justPressed && tbox.alpha == 1 && black.alpha == 0) //never try to put a key.pressed instead .-.
 						{
 							if (inCutscene){
 								FlxG.sound.play(Paths.sound('clickText'), 0.8);
