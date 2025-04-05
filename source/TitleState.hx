@@ -77,6 +77,7 @@ class TitleState extends MusicBeatState
 	var lastKeysPressed:Array<FlxKey> = [];
 
 	var mustUpdate:Bool = false;
+	var qqqeb:Bool = false;
 	
 	var titleJSON:TitleData;
 	
@@ -257,6 +258,8 @@ class TitleState extends MusicBeatState
 
 	function startIntro()
 	{
+		qqqeb = true;
+		
 		if (!initialized)
 		{
 			if(FlxG.sound.music == null) {
@@ -383,7 +386,7 @@ class TitleState extends MusicBeatState
 		#if mobile
 		for (touch in FlxG.touches.list)
 		{
-			if (touch.justPressed)
+			if (touch.justPressed && qqqeb)
 			{
 				pressedEnter = true;
 			}
