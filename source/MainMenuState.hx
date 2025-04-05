@@ -151,7 +151,7 @@ class MainMenuState extends MusicBeatState
 	poster.animation.addByPrefix('story_mode', 'story_mode', 0);
 	add(poster);
 
-	addTouchPad("UP_DOWN", "A_B");
+	addTouchPad("UP_DOWN", "A");
 		
 	super.create();
 	}
